@@ -10,4 +10,5 @@ venv/
 
 .flake8
 pytest.ini
+__pycache__/
 

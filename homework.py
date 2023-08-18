@@ -18,11 +18,11 @@ class InfoMessage:
         self.calories = calories
 
     def get_message(self):
-        return (f'Тип тренировки: {self.training_type}; '
-                f'Длительность: {self.duration: .3f} ч.; '
-                f'Дистанция: {self.distance: .3f} км; '
-                f'Ср. скорость: {self.speed: .3f} км/ч; '
-                f'Потрачено ккал: {self.calories: .3f}. ')
+        return (f'Тип тренировки:{self.training_type}; '
+                f'Длительность:{self.duration: .3f} ч.; '
+                f'Дистанция:{self.distance: .3f} км; '
+                f'Ср. скорость:{self.speed: .3f} км/ч; '
+                f'Потрачено ккал:{self.calories: .3f}.')
 
 
 class Training:
@@ -55,12 +55,13 @@ class Training:
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
 
-        info_msg = InfoMessage(training_type,
-                                self.duration,
-                                distance,
-                                speed,
-                                calories)
-        return info_msg
+        info_msg = InfoMessage(self.__str__(), self.duration,
+                               self.get_distance(), self.get_mean_speed(),
+                               self.get_spent_calories())
+        return info_msg.get_message()
+
+    def __str__(self):
+        return 'Базовый класс'
 
 
 class Running(Training):
@@ -87,6 +88,9 @@ class Running(Training):
 
     def show_training_info(self):
         return super().show_training_info()
+
+    def __str__(self):
+        return 'Running'
 
 
 class SportsWalking(Training):
@@ -120,6 +124,9 @@ class SportsWalking(Training):
     def show_training_info(self):
         return super().show_training_info()
 
+    def __str__(self):
+        return 'SportsWalking'
+
 
 class Swimming(Training):
     """Тренировка: плавание."""
@@ -137,7 +144,7 @@ class Swimming(Training):
         self.count_pool = count_pool
 
     def get_distance(self):
-        super().get_distance(self.action)
+        return super().get_distance()
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
@@ -153,21 +160,19 @@ class Swimming(Training):
     def show_training_info(self):
         return super().show_training_info()
 
+    def __str__(self):
+        return 'Swimming'
+
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
     training_dict = {'SWM': Swimming,
                      'RUN': Running,
                      'WLK': SportsWalking}
-    if workout_type == training_dict['SWM']:
-        swm = training_dict['SWM'](*data)
-        return swm
-    elif workout_type == training_dict['RUN']:
-        run = training_dict['RUN'](*data)
-        return run
-    else:
-        wlk = training_dict['WLK'](*data)
-        return wlk
+    for key in training_dict.keys():
+        if workout_type == key:
+            trn = training_dict[key](*data)
+            return trn
 
 
 def main(training: Training) -> None:
@@ -181,6 +186,7 @@ if __name__ == '__main__':
         ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
         ('WLK', [9000, 1, 75, 180]),
+        # ('SWM', [1206, 12, 6, 12, 6])
     ]
 
     for workout_type, data in packages:
