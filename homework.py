@@ -1,4 +1,5 @@
 M_IN_KM = 1000
+HOUR_IN_MIN = 60
 
 
 class InfoMessage:
@@ -77,34 +78,47 @@ class Running(Training):
     def get_mean_speed(self) -> float:
         return super().get_mean_speed()
 
-
     def get_spent_calories(self):
-        spent_clrs = ((self.CLRS_AVRG_SPEED * super().get_mean_speed()
+        spent_clrs = ((self.CLRS_AVRG_SPEED * self.get_mean_speed()
                       + self.CLRS_AVRG_SPEED_SHIFT)
-                      * self.weight / M_IN_KM * self.duration)
+                      * self.weight / M_IN_KM * self.duration
+                      * HOUR_IN_MIN)
         return spent_clrs
+
+    def show_training_info(self):
+        return super().show_training_info()
 
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     CLRS_AVRG_WEIGTH = 0.035
     CLRS_AVRG_HIEGTH = 0.029
+    HOUR_IN_SEC = 3600
+    CM_IN_METRE = 1000
 
     def __init__(self, action: int,
                  duration: float,
                  weight: float,
-                 heigth: float) -> None:
+                 heigth: int) -> None:
         super().__init__(action, duration, weight)
         self.heigth = heigth
 
-    def get_distance(self):
-        super().get_distance(self.action)
+    def get_distance(self) -> float:
+        return super().get_distance()
+
+    def get_mean_speed(self) -> float:
+        return super().get_mean_speed() * M_IN_KM / self.HOUR_IN_SEC
 
     def get_spent_calories(self):
+        drtn_minute = self.duration / HOUR_IN_MIN
         spent_clrs = ((self.CLRS_AVRG_WEIGTH * self.weight
-                       + (super().get_mean_speed()**2 / self.heigth)
-                       * self.CLRS_AVRG_HIEGTH * self.weight) * self.duration)
+                       + (self.get_mean_speed()**2
+                          / (self.heigth / self.CM_IN_METRE))
+                       * self.CLRS_AVRG_HIEGTH * self.weight) * drtn_minute)
         return spent_clrs
+
+    def show_training_info(self):
+        return super().show_training_info()
 
 
 class Swimming(Training):
@@ -135,6 +149,9 @@ class Swimming(Training):
         spent_clrs = ((self.get_mean_speed() + self.CLRS_AVRG_SPEED)
                       * self.CLRS_AVRG_WEIGTH * self.weight * self.duration)
         return spent_clrs
+
+    def show_training_info(self):
+        return super().show_training_info()
 
 
 def read_package(workout_type: str, data: list) -> Training:
