@@ -10,11 +10,11 @@ class TrainingsError(Exception):
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-    TYPE_OF_TRAINING = 'Тип тренировки: '
-    DUARATION = 'Длительность: '
-    DISTANCE = 'Дистанция: '
-    MEAN_SPEAD = 'Ср. скорость: '
-    SPENT_CALORIES = 'Потрачено ккал: '
+    TYPE_OF_TRAINING: str = 'Тип тренировки: '
+    DUARATION: str = 'Длительность: '
+    DISTANCE: str = 'Дистанция: '
+    MEAN_SPEAD: str = 'Ср. скорость: '
+    SPENT_CALORIES: str = 'Потрачено ккал: '
     training_type: str
     duration: float
     distance: float
