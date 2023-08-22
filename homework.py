@@ -22,13 +22,16 @@ class InfoMessage:
     calories: float
 
     def get_message(self) -> str:
-        return ('{5}{0}; {6}{1:.3f} ч.; {7}{2:.3f} км; {8}{3:.3f} км/ч; '
-                '{9}{4:.3f}.').format(*asdict(self).values(),
-                                      self.TYPE_OF_TRAINING,
-                                      self.DUARATION,
-                                      self.DISTANCE,
-                                      self.MEAN_SPEAD,
-                                      self.SPENT_CALORIES)
+        return ('{0}{training_type}; '
+                '{1}{duration:.3f} ч.; '
+                '{2}{distance:.3f} км; '
+                '{3}{speed:.3f} км/ч; '
+                '{4}{calories:.3f}.').format(self.TYPE_OF_TRAINING,
+                                             self.DUARATION,
+                                             self.DISTANCE,
+                                             self.MEAN_SPEAD,
+                                             self.SPENT_CALORIES,
+                                             **asdict(self))
 
 
 class Training:
