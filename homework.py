@@ -2,36 +2,22 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 
 
-class TrainingsError(Exception):
-    def __init__(self, text: str) -> None:
-        self.txt = text
-
-
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-    TYPE_OF_TRAINING: str = 'Тип тренировки: '
-    DUARATION: str = 'Длительность: '
-    DISTANCE: str = 'Дистанция: '
-    MEAN_SPEAD: str = 'Ср. скорость: '
-    SPENT_CALORIES: str = 'Потрачено ккал: '
     training_type: str
     duration: float
     distance: float
     speed: float
     calories: float
+    MESSAGE: str = ('Тип тренировки: {training_type}; '
+                    'Длительность: {duration:.3f} ч.; '
+                    'Дистанция: {distance:.3f} км; '
+                    'Ср. скорость: {speed:.3f} км/ч; '
+                    'Потрачено ккал: {calories:.3f}.')
 
     def get_message(self) -> str:
-        return ('{0}{training_type}; '
-                '{1}{duration:.3f} ч.; '
-                '{2}{distance:.3f} км; '
-                '{3}{speed:.3f} км/ч; '
-                '{4}{calories:.3f}.').format(self.TYPE_OF_TRAINING,
-                                             self.DUARATION,
-                                             self.DISTANCE,
-                                             self.MEAN_SPEAD,
-                                             self.SPENT_CALORIES,
-                                             **asdict(self))
+        return (self.MESSAGE).format(**asdict(self))
 
 
 class Training:
@@ -138,18 +124,13 @@ class Swimming(Training):
         return mean_speed * self.weight * self.duration
 
 
-#  Такое решение элегантнее?
-#  Или лучше аннотировать data через from typing import Union;
-#  data: list[Union[float, int]]????
 def read_package(workout_type: str, data: list[float | int]) -> Training:
     """Прочитать данные полученные от датчиков."""
     trainings: dict[str, type[Training]] = {'SWM': Swimming,
                                             'RUN': Running,
                                             'WLK': SportsWalking}
     if workout_type not in trainings:
-        #  А такой вариант использования исключения
-        #  будет правильнее?
-        raise TrainingsError('Код тренировки не существует')
+        raise KeyError('Код тренировки не существует')
     return trainings[workout_type](*data)
 
 
