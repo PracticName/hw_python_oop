@@ -74,7 +74,7 @@ class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     CALORIES_WEIGHT_MULTIPLIER: float = 0.035
     CALORIES_HIEGHT_MULTIPLIER: float = 0.029
-    HOUR_IN_SEC: int = 3600
+    # HOUR_IN_SEC: int = 3600
     CM_IN_METRE: int = 100
     CALORIES_MEAN_SPEED_MULTIPLIER: float = 0.278
 
